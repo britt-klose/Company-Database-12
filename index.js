@@ -1,11 +1,11 @@
 const inquirer = require('inquirer');
-const fs = require('fs');
+require ('console.table');
+const connection = require('./connection')
 
 //Function inquirer
 const deptArray =[];
 
-const viewDataBase = () => {
-return(
+const startingPrompt = () => {
     inquirer
     .prompt([
         {
@@ -15,11 +15,31 @@ return(
             name: 'menu',
             choices: ['View All Employees','Add Employee','Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department']
         },
-    ])
-)
+    ]).then(userChoice => {
+        console.log(userChoice)
+        switch(userChoice.menu){
+            case 'View All Departments':
+            viewAllDepts();
+            break;
+        }
+    })
+}
+startingPrompt();
+
+//function
+function viewAllDepts(){
+    const sql = `SELECT id, dept_name AS title FROM departments`;
+    connection.query(sql, (err, rows) => {
+      if (err) {
+       console.log(error)
+         return;
+      }
+      console.table(rows)
+      });
 }
 
 //if they pick add dept
+function addDepartmment() {
 inquirer
 .prompt([
     {
@@ -30,6 +50,8 @@ inquirer
     //say dept name has been added to database
     //then bring back to main menu
 ])
+    .then(department.Data)
+}
 //if they pick add role
 inquirer
 .prompt([
@@ -84,3 +106,4 @@ inquirer
 ]);
 
 //if they pick view (employees, roles, depts) return tables from schema and seeds databases
+
