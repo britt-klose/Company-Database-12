@@ -1,13 +1,12 @@
-INSERT INTO departments (id, dept_name)
-VALUES (1, ""),
-       (2, "");
+INSERT INTO departments (dept_name)
+VALUES ("test"),
+       ("forever");
 
-INSERT INTO roles (id, department_id, title)
-VALUES (1, 1, ""),
-       (2, 2, "");
+INSERT INTO roles (department_id, salary, title)
+VALUES (1, 300000, "runaway"),
+       (2, 400000, "again");
 
-INSERT INTO employees (id, role_id, first_name, last_name)
-VALUES (1, 1, ""),
-       (2, 2, "");
+INSERT INTO employees (role_id, manager_id, first_name, last_name)
+VALUES (1, NULL, "Jerry", 'Smith'),
+       (2, 1, "Roland", 'Fetsburg');
 
----Should I make a query.sql file too?
