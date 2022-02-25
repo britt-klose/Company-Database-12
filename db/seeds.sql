@@ -20,11 +20,11 @@ VALUES  (1, 160000, "Account Manager"),
 INSERT INTO employees (role_id, manager_id, first_name, last_name)
 VALUES (1, NULL, "Michael", 'Scott'),
        (2, 1, "Roland", 'Whitethorn');
-       (2, 1, "Taylor", "Swift");
+       (2, 1, "Louis", "Venuti");
        (3, NULL, "John", "Snow");
        (4, 2, "Sansa", "Stark");
        (4, 2, "Jaime", "Lannister");
-       (5, NULL, "Louis", "Venuti");
+       (5, NULL, "Taylor", "Swift");
        (6, 3, "Pam", "Beesly");
        (6, 3, "Leslie", "Nope");
        (7, 3, "Jan", "Levins");
