@@ -85,7 +85,22 @@ inquirer
     },
     // Say (employee name) has been added to database
     //then bring back to main menu
+    
 ]);
+const sql = `INSERT INTO employees (first_name), (last_name)
+    VALUES (?)`;
+  const params = [body.first_name] [body.last_name];
+  db.query(sql, params, (err, result) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: body
+    });
+  });
+  console.log(`Employee${first_name} ${last_name} has been added to database.`)
 }
 
 // Function: UPDATE EMPLOYEE
@@ -93,7 +108,7 @@ inquirer
 
 // }
 
-//Function: VIEW all ROLES
+// Function: VIEW all ROLES
 function viewAllRoles(){
     const sql = `SELECT id, title, salary AS title FROM roles`;
     connection.query(sql, (err, rows) => {
