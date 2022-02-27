@@ -60,6 +60,22 @@ function viewAllEmployees(){
       });
 };
 
+// Manager array
+var mgnrArray =[];
+function manager(){
+    connection.query(`SELECT id, first_name, last_name FROM employee WHERE manager_id IS NULL`, 
+    (err, result) =>{
+        if (err){
+            console.log(err);
+            for (let i = 0; i < result.length; i++) {
+                mgnrArray.push(result[i].id + ' ' + result[i].first_name + ' ' + result[i].last_name);
+                
+            };
+        }
+    })
+    return mgnrArray;
+}
+
 // Function: to ADD an EMPLOYEE
 function addEmployees(){
 inquirer
@@ -89,15 +105,16 @@ inquirer
 ])
     .then(employeeData =>{
     console.log(employeeData)
-    const sql = `INSERT INTO employees (first_name, last_name, salary, role);`;
-  const params = [employeeData.first_name, employeeData.last_name, employeeData.salary, employeeData.role];
+    const sql =`SELECT id FROM employees WHERE first_name = ${manager.first_name} AND last_name ${manager.last_name}
+     INSERT INTO employees ?`;
+  const params = [employeeData.first, employeeData.last, employeeData.job, employeeData.mngr];
   connection.query(sql, params, (err, rows) => {
      if (err) {
       console.log(err)
       return;
      }
-    console.log(rows)
-    console.log(`Employee ${first_name} ${last_name} added successfully.`)
+    console.table(rows)
+    console.log(`Employee ${first} ${last} added successfully.`)
     startingPrompt()
   });
     })
@@ -122,9 +139,9 @@ function updateRole(){
     ])
     .then(employeeData =>{
         console.log(employeeData)
-    const sql = `UPDATE roles SET role = ? WHERE id = ?`;
-    const params = [req.body.role, req.params.id];
-  
+    const sql = `SELECT employees.last_name, roles.title FROM employees JOIN roles on employees.role_id = roles.id;
+    UPDATE employees SET role_id = ? WHERE last_name = ?`;
+    const params = [employeeData.update, employeeData.up_role];
     connection.query(sql, params, (err, result) => {
       if (err) {
         console.log(err)
@@ -132,7 +149,7 @@ function updateRole(){
       } else if (!result.affectedRows) {
         console.log("role not found.")
       } else {
-        console.log(rows)
+        console.table(rows)
         console.log("Employee role updated successfully.")
         startingPrompt()
       }
@@ -170,25 +187,32 @@ inquirer
     {
         type: 'list',
         message: 'Which department does the role belong to?',
-        name: 'select-dept',
+        name: 'dept',
         choices: ['Engineering', 'Finance', 'Legal', 'Sales', 'Service']
-    },
+    }
 ])
     .then(roleData =>{
         console.log(roleData)
-        const sql = `INSERT INTO Roles (dept_name, salary, title)`; 
-    const params = [roleData.dept_name, roleData.title, roleData.salary];
-    connection.query(sql, params, (err, rows) => {
-     if (err) {
-      console.log(err)
-      return;
-     }
-    console.log(rows)
-    console.log(`Role ${title} added successfully.`)
-    startingPrompt()
-    });
+        const sql = `SELECT * FROM departments WHERE dept_name = '${roleData.dept}'`;
+        connection.query(sql, (err, rows) => {
+            if (err) {
+                console.log(err)
+                return;
+               }
+            console.log(rows)
+        const sql2 = `INSERT INTO roles SET ?`;
+        const params = {title: roleData.name, salary: roleData.salary, department_id: rows[0].id};
+        connection.query(sql2, params, (err, rows) => {
+         if (err) {
+        console.log(err)
+        return;
+        }
+        console.table(rows)
+        console.log(`Role added successfully.`)
+        startingPrompt()
+        })
     })
-}
+})
 
 
 // Function: to VIEW all the DEPTS
@@ -210,23 +234,23 @@ function addDepartment() {
 inquirer
 .prompt([
     {
-        type: 'input',
-        message: 'What is the name of the department?',
-        name: 'dept',
-    },
+        type: "input",
+        message: "What is the name of the department?",
+        name: "dept_name"
+    }
 ])
-    .then(departmentData =>{
+    .then(departmentData => {
         console.log(departmentData)
-        const sql = `INSERT INTO departments (dept_name)`;
-    const params = [departmentData.dept_name];
+        const sql = `INSERT INTO departments SET ?`;
+    const params = {dept_name: departmentData.dept_name};
     connection.query(sql, params, (err, rows) => {
      if (err) {
       console.log(err)
       return;
      }
-    console.log(rows)
-    console.log(`Department ${dept_name}added successfully.`)
+    console.table(rows)
+    console.log(`Department ${departmentData.dept_name} added successfully.`)
     startingPrompt()
-  });
+  })
   })
 }
