@@ -1,8 +1,8 @@
 # Company-Database-12
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
   ## Description
-This application 
+This application provides a structured database for a sample company. Users can view various tables made with mysql such as the company's departments, current job roles, and employees directory. Users can also add new additions to departments, roles, and employees. This application is very user friendly and can easily help a company maintain an organized databse. 
 
   ## Table of Contents
 
@@ -16,17 +16,17 @@ This application
 ## Installation
 To install this application go through the following steps. 
 1. Open or clone the repository to VSC. 
-2. Make sure you have inquirer downloaded. In the terminal run npm install inquirer. 
-3. Run node server.js. Then simply input your details.
+2. Make sure you have the following installed to the terminal: inquirer, console.table, and mysql2.
+3. Run node index.js. Then simply select what you want to do from the menu. 
 
 ## Usage
-While running node server.js in the terminal you will be prompted to select what you want to do. From viewing departments and employees to adding new roles. A visual example and video demo can be seen below for more help. 
+While running node index.js in the terminal you will be prompted to select what you want to do. From viewing departments and employees to adding new roles. If you want to add new fields for departments, roles, or employees you must input or select details for all the prompts. After each additon or viewing the user will be asked what they want to do next and be shown the same menu options to choose from. A visual example and video demo can be seen below for more help. 
 ![alt text](images/.png) 
 
 Demo: 
 
 ## License
-This application uses MIT license 
+This application uses ISC license 
 
 ## Contributing
 If you are looking to add a contribution to this project you can visit this site for information: [Contributor Covenant](https://www.contributor-covenant.org/)
