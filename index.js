@@ -64,7 +64,6 @@ function addEmployees(){
             console.log(err)
             return;
            }
-        console.log(rows1)
     let roles = rows1.map(role => {
         return {
             name: role.title, value: role.id
@@ -76,7 +75,6 @@ function addEmployees(){
             console.log(err)
             return;
            }
-        console.log(rows2)
     let mngrs = rows2.map(mngr => {
         return {
             name: mngr.first_name + ' ' + mngr.last_name, value: mngr.id
