@@ -1,17 +1,13 @@
 const inquirer = require('inquirer');
 require ('console.table');
 const connection = require('./connection')
-//const constructor = require('./constructor')
 
-//Function inquirer
-//const deptArray =[];
 
 // Starting function 
 const startingPrompt = () => {
     inquirer
     .prompt([
         {
-        // think update role is a bonus option
             type: 'list',
             message: 'What would you like to do?',
             name: 'menu',
@@ -60,39 +56,9 @@ function viewAllEmployees(){
       });
 };
 
-// Manager array
-// var mgnrArray =[];
-// function manager(){
-//     connection.query(`SELECT id, first_name, last_name FROM employees WHERE manager_id IS NULL`, 
-//     (err, result) =>{
-//         if (err){
-//             console.log(err);
-//         }
-//             for (let i = 0; i < result.length; i++) {
-//                 mgnrArray.push(result[i].id + ' ' + result[i].first_name + ' ' + result[i].last_name);
-                
-//             };
-        
-//     })
-//     return mgnrArray;
-// }
-// var roleArray =[];
-// function role(){
-//     connection.query(`Select * FROM roles`, (err, result) => {
-//         if(err){
-//             console.log(err);
-//         }
-//             for (let i = 0; i < result.length; i++) {
-//                 roleArray.push(result[i].id + ' ' + result[i].title);  
-//             };
-//     })
-//     return roleArray;
-// }
-
 // Function: to ADD an EMPLOYEE
 function addEmployees(){
     const sql = `SELECT * FROM roles`;
-    //`SELECT employees.id, first_name, last_name, title, employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id;`
     connection.query(sql, (err, rows1) => {
         if (err) {
             console.log(err)
@@ -105,7 +71,6 @@ function addEmployees(){
         }
     })
     const sql2 = `SELECT * FROM employees WHERE manager_id IS NULL`;
-    //`SELECT employees.id, first_name, last_name, title, employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id;`
     connection.query(sql2, (err, rows2) => {
         if (err) {
             console.log(err)
@@ -163,7 +128,6 @@ inquirer
 // Function: UPDATE EMPLOYEE
 function updateRole(){
     const sql = `SELECT * FROM roles`;
-    //`SELECT employees.id, first_name, last_name, title, employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id;`
     connection.query(sql, (err, rows1) => {
         if (err) {
             console.log(err)
@@ -176,7 +140,6 @@ function updateRole(){
         }
     })
     const sql2 = `SELECT * FROM employees`;
-    //`SELECT employees.id, first_name, last_name, title, employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id;`
     connection.query(sql2, (err, rows2) => {
         if (err) {
             console.log(err)
@@ -237,6 +200,17 @@ function viewAllRoles(){
 
 //Function: to ADD a ROLE
 function addRole(){
+    const sql = `SELECT * FROM departments`;
+        connection.query(sql, (err, rows1) => {
+            if (err) {
+                console.log(err)
+                return;
+               }
+               let newDept = rows1.map(dept => {
+                return {
+                    name: dept.dept_name, value: dept.id
+                }
+            })
 inquirer
 .prompt([
     {
@@ -253,19 +227,14 @@ inquirer
         type: 'list',
         message: 'Which department does the role belong to?',
         name: 'dept',
-        choices: ['Engineering', 'Finance', 'Legal', 'Sales', 'Service']
+        choices: newDept
     }
 ])
     .then(roleData =>{
         console.log(roleData)
-        const sql = `SELECT * FROM departments WHERE dept_name = '${roleData.dept}'`;
-        connection.query(sql, (err, rows) => {
-            if (err) {
-                console.log(err)
-                return;
-               }
+       
         const sql2 = `INSERT INTO roles SET ?`;
-        const params = {title: roleData.name, salary: roleData.salary, department_id: rows[0].id};
+        const params = {title: roleData.name, salary: roleData.salary, department_id: roleData.dept};
         connection.query(sql2, params, (err, rows) => {
          if (err) {
         console.log(err)
