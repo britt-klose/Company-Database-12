@@ -22,15 +22,15 @@ VALUES (1, NULL, "Michael", 'Scott'),
        (2, 1, "Roland", 'Whitethorn'),
        (2, 1, "Louis", "Venuti"),
        (3, NULL, "John", "Snow"),
-       (4, 2, "Sansa", "Stark"),
-       (4, 2, "Jaime", "Lannister"),
+       (4, 4, "Sansa", "Stark"),
+       (4, 4, "Jaime", "Lannister"),
        (5, NULL, "Taylor", "Swift"),
-       (6, 3, "Pam", "Beesly"),
-       (6, 3, "Leslie", "Nope"),
-       (7, 3, "Jan", "Levins"),
+       (6, 7, "Pam", "Beesly"),
+       (6, 7, "Leslie", "Nope"),
+       (7, 7, "Jan", "Levins"),
        (8, NULL, "Ann", "Perkins"),
-       (9, 4, "Cassandra", "Clare"),
-       (9, 4, "Daenerys", "Targaryan");
+       (9, 11, "Cassandra", "Clare"),
+       (9, 11, "Daenerys", "Targaryan");
        
        
        
