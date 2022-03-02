@@ -61,23 +61,62 @@ function viewAllEmployees(){
 };
 
 // Manager array
-var mgnrArray =[];
-function manager(){
-    connection.query(`SELECT id, first_name, last_name FROM employee WHERE manager_id IS NULL`, 
-    (err, result) =>{
-        if (err){
-            console.log(err);
-            for (let i = 0; i < result.length; i++) {
-                mgnrArray.push(result[i].id + ' ' + result[i].first_name + ' ' + result[i].last_name);
+// var mgnrArray =[];
+// function manager(){
+//     connection.query(`SELECT id, first_name, last_name FROM employees WHERE manager_id IS NULL`, 
+//     (err, result) =>{
+//         if (err){
+//             console.log(err);
+//         }
+//             for (let i = 0; i < result.length; i++) {
+//                 mgnrArray.push(result[i].id + ' ' + result[i].first_name + ' ' + result[i].last_name);
                 
-            };
-        }
-    })
-    return mgnrArray;
-}
+//             };
+        
+//     })
+//     return mgnrArray;
+// }
+// var roleArray =[];
+// function role(){
+//     connection.query(`Select * FROM roles`, (err, result) => {
+//         if(err){
+//             console.log(err);
+//         }
+//             for (let i = 0; i < result.length; i++) {
+//                 roleArray.push(result[i].id + ' ' + result[i].title);  
+//             };
+//     })
+//     return roleArray;
+// }
 
 // Function: to ADD an EMPLOYEE
 function addEmployees(){
+    const sql = `SELECT * FROM roles`;
+    //`SELECT employees.id, first_name, last_name, title, employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id;`
+    connection.query(sql, (err, rows1) => {
+        if (err) {
+            console.log(err)
+            return;
+           }
+        console.log(rows1)
+    let roles = rows1.map(role => {
+        return {
+            name: role.title, value: role.id
+        }
+    })
+    const sql2 = `SELECT * FROM employees WHERE manager_id IS NULL`;
+    //`SELECT employees.id, first_name, last_name, title, employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id;`
+    connection.query(sql2, (err, rows2) => {
+        if (err) {
+            console.log(err)
+            return;
+           }
+        console.log(rows2)
+    let mngrs = rows2.map(mngr => {
+        return {
+            name: mngr.first_name + ' ' + mngr.last_name, value: mngr.id
+        }
+    })
 inquirer
 .prompt([
     {
@@ -94,66 +133,92 @@ inquirer
         type: 'list',
         message: "What is the employee's role?",
         name: 'job',
-        choices: ["Account Manager", 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Sales Lead', 'Accountant', 'Legal Team Lead', 'Lawyer', 'Customer Service']
+        choices: roles
     },
     {
         type: 'list',
         message: "Who is the employee's manager?",
         name: 'mngr',
-        choices: ["None", 'Michael Scott', 'John Snow', 'Taylor Swift', 'Ann Perkins', ]
+        choices: mngrs
     },
 ])
-    .then(employeeData =>{
+    .then(employeeData => {
     console.log(employeeData)
-    const sql =`SELECT id FROM employees WHERE first_name = ${manager.first_name} AND last_name ${manager.last_name}
-     INSERT INTO employees ?`;
-  const params = [employeeData.first, employeeData.last, employeeData.job, employeeData.mngr];
-  connection.query(sql, params, (err, rows) => {
-     if (err) {
-      console.log(err)
-      return;
-     }
-    console.table(rows)
-    console.log(`Employee ${first} ${last} added successfully.`)
-    startingPrompt()
-  });
+    const sql3 = `INSERT INTO employees SET ?`;
+    const params = {first_name: employeeData.first, last_name: employeeData.last, role_id: employeeData.job, manager_id: employeeData.mngr};
+    connection.query(sql3, params, (err, rows) => {
+            if (err) {
+            console.log(err)
+            return;
+            }
+        console.table(rows)
+        console.log(`Employee ${employeeData.first} ${employeeData.last} added successfully.`)
+        startingPrompt()
     })
+    })
+})
+})
 };
 
 // Function: UPDATE EMPLOYEE
 function updateRole(){
+    const sql = `SELECT * FROM roles`;
+    //`SELECT employees.id, first_name, last_name, title, employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id;`
+    connection.query(sql, (err, rows1) => {
+        if (err) {
+            console.log(err)
+            return;
+           }
+        console.log(rows1)
+    let roles = rows1.map(role => {
+        return {
+            name: role.title, value: role.id
+        }
+    })
+    const sql2 = `SELECT * FROM employees`;
+    //`SELECT employees.id, first_name, last_name, title, employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id;`
+    connection.query(sql2, (err, rows2) => {
+        if (err) {
+            console.log(err)
+            return;
+           }
+        console.log(rows2)
+    let employees = rows2.map(employee => {
+        return {
+            name: employee.first_name + ' ' + employee.last_name, value: employee.id
+        }
+    })
     inquirer
     .prompt([
         {
             type: 'list',
             message: "Which employee's role do you want to update?",
             name: 'update',
-            choices:['MichaelScott', 'Roland Whitethorn', 'Louis Venuti','John Snow', 'Sansa Stark', 'Jaime Lannister', 'Taylor Swift', 'Pam Beesly', 'Leslie Nope', 'Jan Levins', 'Ann Perkins', 'Cassandra Clare', 'Daenerys Targaryan']
+            choices: employees
         },
         {
             type: 'list',
             message: "Which role do you want to assign to selected employee?",
             name: 'up_role',
-            choices:["Account Manager", 'Accountant','Salesperson', 'Lead Engineer', 'Software Engineer', 'Sales Lead', 'Legal Team Lead', 'Lawyer', 'Customer Service']
+            choices: roles
         },
     ])
     .then(employeeData =>{
         console.log(employeeData)
-    const sql = `SELECT employees.last_name, roles.title FROM employees JOIN roles on employees.role_id = roles.id;
-    UPDATE employees SET role_id = ? WHERE last_name = ?`;
-    const params = [employeeData.update, employeeData.up_role];
-    connection.query(sql, params, (err, result) => {
+    const sql3 = `UPDATE employees SET role_id=? WHERE id= ?`;
+    const params = [employeeData.up_role, employeeData.update];
+    connection.query(sql3, params, (err, rows) => {
       if (err) {
         console.log(err)
         return;
-      } else if (!result.affectedRows) {
-        console.log("role not found.")
       } else {
         console.table(rows)
         console.log("Employee role updated successfully.")
         startingPrompt()
       }
     });
+})
+})
 })
 };
 
@@ -199,7 +264,6 @@ inquirer
                 console.log(err)
                 return;
                }
-            console.log(rows)
         const sql2 = `INSERT INTO roles SET ?`;
         const params = {title: roleData.name, salary: roleData.salary, department_id: rows[0].id};
         connection.query(sql2, params, (err, rows) => {
@@ -208,12 +272,12 @@ inquirer
         return;
         }
         console.table(rows)
-        console.log(`Role added successfully.`)
+        console.log(`Role ${roleData.name} added successfully.`)
         startingPrompt()
         })
     })
 })
-
+}
 
 // Function: to VIEW all the DEPTS
 function viewAllDepts(){
