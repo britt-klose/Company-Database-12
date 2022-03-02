@@ -21,9 +21,9 @@ To install this application go through the following steps.
 
 ## Usage
 While running node index.js in the terminal you will be prompted to select what you want to do. From viewing departments and employees to adding new roles. If you want to add new fields for departments, roles, or employees you must input or select details for all the prompts. After each additon or viewing the user will be asked what they want to do next and be shown the same menu options to choose from. A visual example and video demo can be seen below for more help. 
-![alt text](images/.png) 
+![alt text](images/preview.png) 
 
-Demo: 
+Demo: https://drive.google.com/file/d/1FR4t7W4jol459Yst3KbmyvcDxxbv8dVm/view
 
 ## License
 This application uses ISC license 
